@@ -2,12 +2,12 @@ import axios from 'axios';
 
 const API_KEY = 'd914204588c40cfc93aabf13fc5bc4b7';
 
-// Function to fetch movie details by ID from TMDB API
+// Function to fetch the  movie details by ID from TMDB API
 export async function fetchMovieDetails(movieId) {
     try {
         const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}?api_key=${API_KEY}`);
-        console.log("API URL:", response.config.url); // Log API request URL
-        console.log("Movie Details Response:", response.data); // Log movie details response
+        console.log("API URL:", response.config.url); 
+        console.log("Movie Details Response:", response.data);
         return response.data;
     } catch (error) {
         console.error('Error fetching movie details:', error);
@@ -15,19 +15,21 @@ export async function fetchMovieDetails(movieId) {
     }
 }
 
-// Function to fetch similar movies based on a movies attributese
+// Function to fetch similar movies based on a movies id
 export async function getSimilarMovies(movieId) {
     try {
         // Fetch details of the selected movie
         const movieDetails = await fetchMovieDetails(movieId);
-        console.log("Movie Details:", movieDetails); // Logging movieDetails
-        if (!movieDetails || !movieDetails.genres || movieDetails.genres.length === 0) return []; // Check if genres exists
-
-        // Extract relevant features (genre, keywords) from the selected movie
+        console.log("Movie Details:", movieDetails); 
+         // Check if genres exists
+        if (!movieDetails || !movieDetails.genres || movieDetails.genres.length === 0){
+             return [];
+        }
+        // getting the genres
         const { genres } = movieDetails;
         const features = genres.map((genre) => genre.id);
 
-        // Use features to find similar movies (This is a simplified example)
+        // Use features to find similar movies
         const similarMovies = await findSimilarMoviesByFeatures(features);
 
         return similarMovies;
@@ -51,7 +53,7 @@ async function findSimilarMoviesByFeatures(features) {
         return response.data.results;
     } catch (error) {
         console.error('Error finding similar movies:', error);
-        return []; // Return an empty array in case of error
+        return [];
     }
 }
 
